@@ -19,9 +19,9 @@ PSInput VSMain(float4 position : POSITION, float4 color : COLOR)
 {
     PSInput result;
 
-    float xDistance = 0.5f;
+    float xDistance = 0.0f;
     float yDistance = 0.0f;
-    float zDistance = 0.0f;
+    float zDistance = 0.5f;
     float scale = 1.5f;
 
     float4x4 m_translation =
@@ -39,9 +39,21 @@ PSInput VSMain(float4 position : POSITION, float4 color : COLOR)
         0.0f, 0.0f, scale, 0.0f,
         0.0f, 0.0f, 0.0f, 1.0f
 	};
+    
+	const float tau = 6.283185307f; //Tau == 2 x PI, aka a full turn
+	float angle = tau / 12.0f;      
+    
+	float4x4 m_rotateYZ =
+	{
+		1.0f, 0.0f, 0.0f,   0.0f,
+        0.0f, cos(angle),   sin(angle), 0.0f,
+        0.0f, -sin(angle),  cos(angle), 0.0f,
+        0.0f, 0.0f, 0.0f,   1.0f
+	};
+    
+	float4x4 finalTransform = mul(m_rotateYZ, m_translation);
 
-    //float4 newPos = mul(position, m_translation);
-	float4 newPos = mul(position, m_scale);
+	float4 newPos = mul(position, finalTransform);
 
     result.position = newPos;
     result.color = color;
