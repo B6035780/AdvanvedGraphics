@@ -19,7 +19,31 @@ PSInput VSMain(float4 position : POSITION, float4 color : COLOR)
 {
     PSInput result;
 
-    result.position = position;
+    float xDistance = 0.5f;
+    float yDistance = 0.0f;
+    float zDistance = 0.0f;
+    float scale = 1.5f;
+
+    float4x4 m_translation =
+    {
+        1.0,        0.0f,       0.0f,       0.0f,
+        0.0,        1.0f,       0.0f,       0.0f,
+        0.0,        0.0f,       1.0f,       0.0f,
+        xDistance,  yDistance,  zDistance,  1.0f
+    };
+
+    float4x4 m_scale =
+    {
+		scale, 0.0f, 0.0f, 0.0f,
+        0.0f, scale, 0.0f, 0.0f,
+        0.0f, 0.0f, scale, 0.0f,
+        0.0f, 0.0f, 0.0f, 1.0f
+	};
+
+    //float4 newPos = mul(position, m_translation);
+	float4 newPos = mul(position, m_scale);
+
+    result.position = newPos;
     result.color = color;
 
     return result;
